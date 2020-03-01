@@ -1,0 +1,27 @@
+CREATE TRIGGER trigger_insert_solicitudes AFTER INSERT ON solicitudes_documentos FOR EACH ROW
+BEGIN
+		INSERT INTO registros_solicitudes_documentos ( id_solicitud, registro, id_usuario, fecha_hora, activo, folio_solicitud )
+	VALUES
+		(
+			new.id_solicitud,
+			CONCAT(
+				'La solicitud de control de documentos ha sido creada con el folio ',
+				new.folio_solicitud,
+				' por el usuario ',(
+				SELECT
+					CONCAT( P.nombre, ' ', P.ap_paterno, ' ', P.ap_materno ) 
+				FROM
+					personas AS P
+					INNER JOIN usuarios AS U ON P.id_persona = U.id_persona 
+				WHERE
+					U.id_usuario = new.id_usuario 
+				),
+				'.' 
+			),
+			new.id_usuario,
+			NOW(),
+			1,
+		new.folio_solicitud	
+		);
+
+END

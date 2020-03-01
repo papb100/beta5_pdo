@@ -1,0 +1,13 @@
+CREATE TRIGGER trigger_datos AFTER INSERT ON datos FOR EACH ROW
+BEGIN
+		INSERT INTO log( actividad, fecha_registro, hora_registro,id_dato)
+	VALUES
+		(
+			'Se ha registrado un nuevo usuario',
+			
+			NOW(),
+			NOW(),
+			new.id_datos
+		);
+
+END
